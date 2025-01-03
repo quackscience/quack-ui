@@ -201,7 +201,7 @@ export default function SettingsPage() {
                                 className="font-mono"
                                 disabled={
                                   isLoadingCredentials ||
-                                  credentialSource === "env"
+                                  credentialSource === "noenv"
                                 }
                                 placeholder="https://quackpy.fly.dev"
                                 {...field}
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                                 className="font-mono"
                                 disabled={
                                   isLoadingCredentials ||
-                                  credentialSource === "env"
+                                  credentialSource === "noenv"
                                 }
                                 placeholder="default"
                                 autoComplete="username"
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                                   className="font-mono pr-10"
                                   disabled={
                                     isLoadingCredentials ||
-                                    credentialSource === "env"
+                                    credentialSource === "noenv"
                                   }
                                   type={showPassword ? "text" : "password"}
                                   autoComplete="current-password"

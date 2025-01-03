@@ -2,7 +2,10 @@
 
 > CH-UI fork for DuckDB / Quackpipe
 
-### Option 2: Build from Source
+![image](https://github.com/user-attachments/assets/c0be2ae3-041e-4140-8b21-cc16d203564f)
+
+
+### Build from Source
 
 #### Prerequisites
 - Node.js >= 20.x

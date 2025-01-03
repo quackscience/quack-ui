@@ -267,11 +267,11 @@ export default function SettingsPage() {
                                   <TooltipTrigger asChild>
                                     <button
                                       type="button"
-                                      onClick={() =>
+                                      onClick={() => {
                                         if (credentialSource !== "env") {
                                           setShowPassword(!showPassword)
                                         }
-                                      }
+                                      }}
                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       {showPassword ? (

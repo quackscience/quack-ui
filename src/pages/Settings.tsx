@@ -203,12 +203,12 @@ export default function SettingsPage() {
                                   isLoadingCredentials ||
                                   credentialSource === "env"
                                 }
-                                placeholder="https://your-clickhouse-host:8123"
+                                placeholder="https://quackpy.fly.dev"
                                 {...field}
                               />
                             </FormControl>
                             <FormDescription>
-                              The URL of your ClickHouse server, including
+                              The URL of your DuckDB/Quackpipe server, including
                               protocol and port
                             </FormDescription>
                             <FormMessage />

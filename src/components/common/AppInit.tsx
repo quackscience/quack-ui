@@ -43,9 +43,9 @@ const AppInitializer = ({ children }: { children: ReactNode }) => {
   // Effect to set credentials from environment variables
   useEffect(() => {
     // Check if credentials are set from environment variables
-    const envUrl = window.env?.VITE_CLICKHOUSE_URL;
-    const envUser = window.env?.VITE_CLICKHOUSE_USER;
-    const envPass = window.env?.VITE_CLICKHOUSE_PASS;
+    const envUrl = import.meta.env?.VITE_CLICKHOUSE_URL || window.env?.VITE_CLICKHOUSE_URL;
+    const envUser = import.meta.env?.VITE_CLICKHOUSE_USER || window.env?.VITE_CLICKHOUSE_USER;
+    const envPass = import.meta.env?.VITE_CLICKHOUSE_PASS || window.env?.VITE_CLICKHOUSE_PASS;
     const envUseAdvanced = window.env?.VITE_CLICKHOUSE_USE_ADVANCED;
     const envCustomPath = window.env?.VITE_CLICKHOUSE_CUSTOM_PATH;
 

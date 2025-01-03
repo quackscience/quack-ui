@@ -2,7 +2,7 @@
 
 > CH-UI fork for DuckDB / Quackpipe
 
-![image](https://github.com/user-attachments/assets/c0be2ae3-041e-4140-8b21-cc16d203564f)
+![Quack-UI-Workspace-ezgif com-crop](https://github.com/user-attachments/assets/aec14c53-3bfb-4e1e-acb9-fcb9001c433e)
 
 
 ### Build from Source

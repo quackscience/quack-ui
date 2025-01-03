@@ -201,7 +201,7 @@ export default function SettingsPage() {
                                 className="font-mono"
                                 disabled={
                                   isLoadingCredentials ||
-                                  credentialSource === "noenv"
+                                  credentialSource === "env"
                                 }
                                 placeholder="https://quackpy.fly.dev"
                                 {...field}
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                                 className="font-mono"
                                 disabled={
                                   isLoadingCredentials ||
-                                  credentialSource === "noenv"
+                                  credentialSource === "env"
                                 }
                                 placeholder="default"
                                 autoComplete="username"
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                                   className="font-mono pr-10"
                                   disabled={
                                     isLoadingCredentials ||
-                                    credentialSource === "noenv"
+                                    credentialSource === "env"
                                   }
                                   type={showPassword ? "text" : "password"}
                                   autoComplete="current-password"
@@ -268,7 +268,9 @@ export default function SettingsPage() {
                                     <button
                                       type="button"
                                       onClick={() =>
-                                        setShowPassword(!showPassword)
+                                        if (credentialSource !== "env") {
+                                          setShowPassword(!showPassword)
+                                        }
                                       }
                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
                                     >

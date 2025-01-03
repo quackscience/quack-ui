@@ -23,6 +23,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Hack base path for pages
+        if: false
         run: sed '/plugins:.*/a base:"/quack-ui",' vite.config.ts > vite.config.ts
 
       - name: Build project

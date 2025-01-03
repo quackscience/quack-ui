@@ -83,7 +83,7 @@ export default function Admin() {
                 <div>
                   <h2 className="text-2xl font-medium  mb-2">Configuration</h2>
                   <p className="text-gray-400 mb-6">
-                    Manage ClickHouse configuration settings.
+                    Manage DuckDB configuration settings.
                   </p>
                   <ClickhouseDefaultConfiguration />
                 </div>
@@ -106,7 +106,7 @@ export default function Admin() {
               </li>
               <li>
                 All the actions you take here run queries directly on your
-                ClickHouse system database, be aware that those can be{" "}
+                DuckDB system database, be aware that those can be{" "}
                 <strong className="text-red-500">irreversible.</strong>
               </li>
             </ul>

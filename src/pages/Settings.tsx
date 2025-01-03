@@ -133,7 +133,7 @@ export default function SettingsPage() {
       useAdvanced: false,
       customPath: "",
     });
-    toast.success("Disconnected from ClickHouse server.");
+    toast.success("Disconnected from DuckDB server.");
     navigate("/settings");
   };
 
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                   Using Environment Variables
                 </AlertTitle>
                 <AlertDescription>
-                  Your ClickHouse credentials are set using environment
+                  Your DuckDB credentials are set using environment
                   variables. Please update your environment variables to change
                   the connection settings.
                 </AlertDescription>
@@ -176,7 +176,7 @@ export default function SettingsPage() {
                   Connection Settings
                 </CardTitle>
                 <CardDescription>
-                  Configure your connection to the ClickHouse server
+                  Configure your connection to the DuckDB server
                 </CardDescription>
               </CardHeader>
 
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
                               <Server className="h-4 w-4" />
-                              ClickHouse Host
+                              DuckDB API Host
                             </FormLabel>
                             <FormControl>
                               <Input
@@ -321,7 +321,7 @@ export default function SettingsPage() {
                                 Advanced Settings
                               </FormLabel>
                               <FormDescription>
-                                Enable custom path handling for the ClickHouse
+                                Enable custom path handling for the 
                                 URL
                               </FormDescription>
                             </div>
@@ -340,7 +340,7 @@ export default function SettingsPage() {
                                 <Input
                                   className="font-mono"
                                   disabled={isLoadingCredentials}
-                                  placeholder="clickhouse-{cluster_name}"
+                                  placeholder="distributed-{cluster_name}"
                                   {...field}
                                 />
                               </FormControl>

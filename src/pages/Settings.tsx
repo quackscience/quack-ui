@@ -269,10 +269,13 @@ export default function SettingsPage() {
                                       type="button"
                                       onClick={() => {
                                         if (credentialSource !== "env") {
-                                          setShowPassword(!showPassword)
+                                          setShowPassword(!showPassword);
                                         }
                                       }}
-                                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                                      disabled={credentialSource === "env"}
+                                      className={`absolute inset-y-0 right-0 pr-3 flex items-center ${
+                                        credentialSource === "env" ? "cursor-not-allowed text-muted-foreground" : "text-muted-foreground hover:text-foreground"
+                                      }`}
                                     >
                                       {showPassword ? (
                                         <EyeOff className="h-4 w-4" />
@@ -282,7 +285,9 @@ export default function SettingsPage() {
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    {showPassword
+                                    {credentialSource === "env"
+                                      ? "Password visibility is locked by the environment"
+                                      : showPassword
                                       ? "Hide password"
                                       : "Show password"}
                                   </TooltipContent>

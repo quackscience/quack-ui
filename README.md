@@ -22,4 +22,4 @@ npm run preview
 
 ## 📄 License
 
-This ch-ui fork is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+[ch-ui](https://github.com/caioricciuti/ch-ui) fork licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

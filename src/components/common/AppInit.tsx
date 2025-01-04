@@ -49,7 +49,16 @@ const AppInitializer = ({ children }: { children: ReactNode }) => {
     const envUseAdvanced = window.env?.VITE_CLICKHOUSE_USE_ADVANCED;
     const envCustomPath = window.env?.VITE_CLICKHOUSE_CUSTOM_PATH;
 
-    if (envUrl && envUser) {
+    if (import.meta.env?.VITE_SELFSERVICE || window.env?.VITE_SELFSERVICE) {
+      setCredential({
+        url: window.location.origin,
+        username: 'default',
+        password: envPass || "",
+        useAdvanced: false,
+        customPath: "",
+      });
+      setCredentialSource("auto");
+    } else if (envUrl) {
       setCredential({
         url: envUrl,
         username: envUser,

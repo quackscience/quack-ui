@@ -23,13 +23,13 @@ function HomePage() {
       <UploadFromFile />
 */}      
       <ResizablePanelGroup direction="horizontal">
-{/*      
+
       <ResizablePanelGroup direction="horizontal">      
         <ResizablePanel className="overflow-scroll" defaultSize={25}>
           <DatabaseExplorer />
         </ResizablePanel>
         <ResizableHandle withHandle />
-*/}  
+
         <ResizableHandle withHandle />      
         <ResizablePanel
           className="overflow-scroll"

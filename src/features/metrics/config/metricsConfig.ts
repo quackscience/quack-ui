@@ -61,10 +61,7 @@ export const metrics: Metrics[] = [
       {
         title: "Server Uptime (days)",
         query: `
-        -- set max decimal places to 2
-
-          SELECT 
-            ROUND(uptime() / 86400, 2) AS uptime_days
+        SELECT ROUND(uptime() / 86400, 2) AS uptime_days
         `,
         type: "card",
         description:
@@ -190,45 +187,6 @@ export const metrics: Metrics[] = [
           },
         },
         tiles: 2,
-      },
-    ],
-  },
-  {
-    title: "Storage",
-    scope: "storage",
-    description: "Storage-related metrics.",
-    icon: HardDriveIcon,
-    items: [
-      {
-        title: "Disk Usage",
-        query: `SELECT 
-                  name,
-                  round(total_space / 1024 / 1024 / 1024, 2) AS total_gb,
-                  round(free_space / 1024 / 1024 / 1024, 2) AS free_gb,
-                  round((1 - free_space / total_space) * 100, 2) AS used_percent
-                FROM system.disks`,
-        type: "table",
-        description: "Detailed disk usage information.",
-      },
-      {
-        title: "Database Sizes",
-        query: `SELECT 
-                  database,
-                  round(sum(total_bytes) / 1024 / 1024 / 1024, 2) AS size_gb
-                FROM system.tables
-                GROUP BY database
-                ORDER BY size_gb DESC`,
-        type: "chart",
-        chartType: "bar",
-        description: "Size distribution of databases.",
-        chartConfig: {
-          indexBy: "database",
-          size_gb: {
-            label: "Size (GB)",
-            color: "hsl(var(--chart-2))",
-          },
-        },
-        tiles: 4,
       },
     ],
   },

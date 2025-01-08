@@ -9,6 +9,7 @@ declare global {
       VITE_CLICKHOUSE_PASS?: string;
       VITE_CLICKHOUSE_USE_ADVANCED?: boolean;
       VITE_CLICKHOUSE_CUSTOM_PATH?: string;
+      VITE_SELFSERVICE?: string;
     };
   }
 }
@@ -46,10 +47,19 @@ const AppInitializer = ({ children }: { children: ReactNode }) => {
     const envUrl = ( import.meta.env?.VITE_CLICKHOUSE_URL || window.env?.VITE_CLICKHOUSE_URL );
     const envUser = ( import.meta.env?.VITE_CLICKHOUSE_USER || window.env?.VITE_CLICKHOUSE_USER );
     const envPass = ( import.meta.env?.VITE_CLICKHOUSE_PASS || window.env?.VITE_CLICKHOUSE_PASS );
-    const envUseAdvanced = window.env?.VITE_CLICKHOUSE_USE_ADVANCED;
-    const envCustomPath = window.env?.VITE_CLICKHOUSE_CUSTOM_PATH;
+    const envUseAdvanced = ( import.meta.env?.VITE_CLICKHOUSE_USE_ADVANCED || window.env?.VITE_CLICKHOUSE_USE_ADVANCED );
+    const envCustomPath = ( import.meta.env?.VITE_CLICKHOUSE_CUSTOM_PATH || window.env?.VITE_CLICKHOUSE_CUSTOM_PATH );
 
-    if (envUrl && envUser) {
+    if (import.meta.env?.VITE_SELFSERVICE || window.env?.VITE_SELFSERVICE) {
+      setCredential({
+        url: window.location.origin,
+        username: 'default',
+        password: '',
+        useAdvanced: false,
+        customPath: "",
+      });
+      setCredentialSource("env");
+    } else if (envUrl) {
       setCredential({
         url: envUrl,
         username: envUser,

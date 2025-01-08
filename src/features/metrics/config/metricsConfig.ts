@@ -1,6 +1,3 @@
-//ignore TS check
-// @ts-nocheck
-
 import { ChartConfig } from "@/components/ui/chart";
 import {
   HomeIcon,
@@ -13,6 +10,7 @@ import {
   CpuIcon,
   AlertTriangleIcon,
 } from "lucide-react";
+import { ReactNode, ComponentType } from "react";
 
 export interface Metrics {
   title: string;
@@ -28,29 +26,51 @@ export interface MetricItem {
   type: "card" | "table" | "chart";
   chartType?: "bar" | "line" | "area" | "pie" | "radar" | "radial";
   description: string;
-  chartConfig?: ChartConfig;
+  chartConfig?: CustomChartConfig;
   tiles?: number;
+}
+
+export type ChartTheme = {
+  light: string;
+  dark: string;
+}
+
+export type ChartDataConfig = {
+  label?: ReactNode;
+  icon?: ComponentType<{}>;
+} & ({ color?: string; theme?: never } | { color?: never; theme: ChartTheme });
+
+export type CustomChartConfig = {
+  indexBy: string;
+  [key: string]: ChartDataConfig | string | undefined;
 }
 
 export const metrics: Metrics[] = [
   {
     title: "Overview",
     scope: "overview",
-    description: "Overview of ClickHouse metrics.",
+    description: "Overview of DuckDB metrics.",
     icon: HomeIcon,
     items: [
       {
         title: "Server Uptime (days)",
-        query: `SELECT 1`,
+        query: `
+          SELECT 
+            ROUND(SUM(julianday('now') - julianday(start_time)), 2) AS uptime_days 
+          FROM pragma_database_list
+          WHERE name = 'main'
+        `,
         type: "card",
         description:
-          "Total time the server has been running in seconds, minutes, hours, and days.",
+          "Total time the server has been running in days.",
         tiles: 1,
       },
       {
         title: "Total Databases",
         query: `
-          SELECT count(database) as total_databases FROM (SHOW ALL TABLES)
+          SELECT COUNT(*) AS total_databases 
+          FROM pragma_database_list 
+          WHERE name NOT IN ('main', 'temp')
         `,
         type: "card",
         description: "Total number of databases excluding system databases.",
@@ -59,7 +79,9 @@ export const metrics: Metrics[] = [
       {
         title: "Total Tables",
         query: `
-          SELECT count(name) as total_tables FROM (SHOW ALL TABLES);
+          SELECT COUNT(*) AS total_tables 
+          FROM information_schema.tables 
+          WHERE table_schema NOT IN ('main', 'temp')
         `,
         type: "card",
         description: "Total number of user tables excluding temporary tables.",
@@ -70,7 +92,7 @@ export const metrics: Metrics[] = [
         query: `SELECT version() AS version`,
         type: "card",
         description:
-          "Version of the ClickHouse server running on the current instance.",
+          "Version of the DuckDB server running on the current instance.",
         tiles: 1,
       },
     ],
@@ -83,65 +105,92 @@ export const metrics: Metrics[] = [
     items: [
       {
         title: "Total Tables",
-        query: `SELECT count(name) as total_tables FROM (SHOW ALL TABLES);`,
+        query: `
+          SELECT COUNT(*) AS total_tables 
+          FROM information_schema.tables 
+          WHERE table_schema NOT IN ('main', 'temp')
+        `,
         type: "card",
         description: "Total number of user-defined tables.",
         tiles: 1,
       },
       {
         title: "Total System Tables",
-        query: `SELECT count(name) as total_tables FROM (SHOW ALL TABLES);`,
+        query: `
+          SELECT COUNT(*) AS total_tables 
+          FROM information_schema.tables 
+          WHERE table_schema IN ('main', 'temp')
+        `,
         type: "card",
         description: "Total number of system tables.",
         tiles: 1,
       },
-    ],
-  },
-  {
-    title: "Queries",
-    scope: "queries",
-    description: "Comprehensive metrics related to queries in the system.",
-    icon: TerminalSquareIcon,
-    items: [
       {
-        title: "Queries Per Second (QPS)",
-        query: `SELECT 0`,
-        type: "chart",
-        chartType: "area",
-        description: "Rate of queries per second over the last hour.",
-        chartConfig: {
-          indexBy: "minute",
-          qps: {
-            label: "QPS",
-            color: "hsl(var(--chart-3))",
-          },
-        },
+        title: "Total Temporary Tables",
+        query: `
+          SELECT COUNT(*) AS total_tables 
+          FROM information_schema.tables 
+          WHERE table_schema LIKE 'temp%'
+        `,
+        type: "card",
+        description: "Total number of temporary tables.",
+        tiles: 1,
+      },
+      {
+        title: "Biggest Table",
+        query: `
+          SELECT table_name AS table 
+          FROM information_schema.tables 
+          WHERE table_schema NOT IN ('main', 'temp')
+          ORDER BY table_name DESC 
+          LIMIT 1
+        `,
+        type: "card",
+        description: "Largest table in the system.",
+        tiles: 1,
+      },
+      {
+        title: "Table Cardinality",
+        query: `
+          SELECT table_schema, table_name AS table, COUNT(*) AS total_rows 
+          FROM information_schema.tables 
+          WHERE table_schema NOT IN ('main', 'temp')
+          GROUP BY table_schema, table_name 
+          ORDER BY total_rows DESC 
+          LIMIT 10
+        `,
+        type: "table",
+        description: "Number of rows in the top 10 tables.",
+        tiles: 2,
+      },
+      {
+        title: "Table Row Counts",
+        query: `
+          SELECT table_schema, table_name AS table, COUNT(*) AS total_rows 
+          FROM information_schema.tables 
+          WHERE table_schema NOT IN ('main', 'temp')
+          GROUP BY table_schema, table_name 
+          ORDER BY total_rows DESC 
+          LIMIT 10
+        `,
+        type: "table",
+        description: "Number of rows in the top 10 tables.",
         tiles: 2,
       },
     ],
   },
   {
-    title: "Performance",
-    scope: "performance",
-    description: "Performance-related metrics.",
-    icon: CpuIcon,
+    title: "Settings & Config",
+    scope: "settings",
+    description: "Settings and configuration.",
+    icon: Settings2,
     items: [
       {
-        title: "CPU Usage",
-        query: `
-          SELECT 0
-        `,
-        type: "chart",
-        chartType: "line",
-        description: "CPU usage over the last hour.",
-        chartConfig: {
-          indexBy: "minute",
-          cpu_usage: {
-            label: "CPU Usage",
-            color: "hsl(var(--chart-5))",
-          },
-        },
-        tiles: 2,
+        title: "Current Settings",
+        query: `SELECT * FROM pragma_settings`,
+        type: "table",
+        description: "Current DuckDB settings.",
+        tiles: 4,
       },
     ],
   },

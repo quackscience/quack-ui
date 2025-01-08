@@ -23,6 +23,22 @@ For production
 npm run preview
 ```
 
+#### Configuration
+The application will defaults to the connection setup on first access.
+
+
+To preset connection details use the following ENV variables:
+```
+VITE_CLICKHOUSE_URL
+VITE_CLICKHOUSE_USER
+VITE_CLICKHOUSE_PASS
+```
+
+For self-serving setups such as quackpipe
+```
+VITE_SELFSERVICE
+```
+
 ## 📄 License
 
 [ch-ui](https://github.com/caioricciuti/ch-ui) fork licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

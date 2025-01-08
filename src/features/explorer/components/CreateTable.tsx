@@ -171,7 +171,7 @@ const CreateTable = () => {
         return `${field.name} ${typeStr} ${nullableStr}${commentStr}`;
       }).join(",\n    ");
 
-      let sql = `CREATE TABLE ${database}.${tableName}\n(\n    ${fieldDefinitions}\n) ENGINE = ${engine}`;
+      let sql = `CREATE TABLE ${database}.${tableName}\n(\n    ${fieldDefinitions}\n)`;
 
       if (primaryKeyFields.length > 0) {
         sql += `\nPRIMARY KEY (${primaryKeyFields.join(", ")})`;

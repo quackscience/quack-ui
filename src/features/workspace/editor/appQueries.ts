@@ -6,30 +6,30 @@ export const appQueries: Record<string, AppQuery> = {
   getIntellisense: {
     query: `
     SELECT 
-      database,
-      table,
-      name AS column_name,
-      type AS column_type
-    FROM system.columns
-    ORDER BY database, table, column_name;
+      table_catalog AS database,
+      table_schema AS schema,
+      table_name AS table,
+      column_name,
+      data_type AS column_type
+    FROM information_schema.columns
+    ORDER BY table_catalog, table_schema, table_name, column_name;
     `,
   },
   getDatabasesTables: {
     query: `
     SELECT
-      databases.name AS database_name,
-      tables.name AS table_name,
-      tables.engine AS table_type
-    FROM system.databases AS databases
-    LEFT JOIN system.tables AS tables
-      ON databases.name = tables.database
-    ORDER BY database_name, table_name;
+      table_catalog AS database_name,
+      table_schema AS schema_name,
+      table_name AS table_name,
+      table_type
+    FROM information_schema.tables
+    ORDER BY table_catalog, table_schema, table_name;
     `,
   },
   getClickHouseFunctions: {
-    query: `SELECT name from system.functions`,
+    query: `SELECT function_name AS name FROM duckdb_functions`,
   },
   getKeywords: {
-    query: `SELECT keyword FROM system.keywords`,
+    query: `SELECT keyword FROM duckdb_keywords`,
   },
 };

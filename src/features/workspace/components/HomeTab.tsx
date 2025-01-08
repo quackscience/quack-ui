@@ -93,27 +93,26 @@ const HomeTab = () => {
     setLoading(true);
     setError(null);
     try {
-      const recentQueries = await runQuery(`
-        SELECT DISTINCT
-          replaceAll(query, 'FORMAT JSON', '') AS cleaned_query,
-        max(event_time) AS latest_event_time,
+    const recentQueries = await runQuery(`
+      SELECT DISTINCT
+        REPLACE(query, 'FORMAT JSON', '') AS cleaned_query,
+        MAX(event_time) AS latest_event_time,
         query_kind,
-        length(replaceAll(query, 'FORMAT JSON', '')) AS query_length
+        LENGTH(REPLACE(query, 'FORMAT JSON', '')) AS query_length
       FROM
-        system.query_log
+        pragma_sql_log
       WHERE
         user = '${credential.username}'
-        AND event_time >= (current_timestamp() - INTERVAL 2 DAY)
-        AND arrayExists(db -> db NOT LIKE '%system%', databases)
+        AND event_time >= (CURRENT_TIMESTAMP - INTERVAL '2' DAY)
         AND query NOT LIKE 'SELECT DISTINCT%'
       GROUP BY
         cleaned_query, query_kind
       ORDER BY
         latest_event_time DESC
-        LIMIT
-          6;
-      `);
-      setRecentItems(recentQueries.data);
+      LIMIT
+        6;
+    `);
+    setRecentItems(recentQueries.data);
     } catch (err) {
       setError("Failed to load recent queries");
       console.error(err);
@@ -121,6 +120,7 @@ const HomeTab = () => {
       setLoading(false);
     }
   };
+
 
   const truncateQuery = (query: string, length: number = 50) => {
     return query.length > length ? `${query.slice(0, length)}...` : query;

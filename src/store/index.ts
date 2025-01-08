@@ -459,10 +459,7 @@ const useAppStore = create<AppState>()(
         try {
           const result = await clickHouseClient.query({
             query: `
-                            SELECT if(grant_option = 1, true, false) AS is_admin 
-                            FROM system.grants 
-                            WHERE user_name = currentUser() 
-                            LIMIT 1
+                            SELECT false AS is_admin 
                         `,
           });
 
@@ -495,12 +492,16 @@ const useAppStore = create<AppState>()(
         }));
 
         try {
-          const result = await runQuery(`
-                         SELECT COUNT(*) as exists 
-                         FROM system.tables 
-                         WHERE database = 'CH_UI' 
-                         AND name = 'saved_queries'
-                    `);
+
+
+	  await runQuery("ATTACH '/tmp/chui.db' AS CH_UI");
+	  const result = await runQuery(`
+		  SELECT COUNT(*) as exists 
+		  FROM information_schema.tables 
+		  WHERE table_catalog = 'CH_UI' 
+		  AND table_name = 'saved_queries'
+	  `);
+
           const response = result as SavedQueriesCheckResponse;
           const isActive = response.data[0]?.exists > 0;
 
@@ -545,26 +546,24 @@ const useAppStore = create<AppState>()(
 
         try {
           // Run queries in sequence with proper error handling
-          await runQuery("CREATE DATABASE IF NOT EXISTS CH_UI").then(
-            async () => {
-              await runQuery(`
-                            CREATE TABLE IF NOT EXISTS CH_UI.saved_queries (
-                                id String,
-                                name String,
-                                query String,
-                                created_at DateTime64(3),
-                                updated_at DateTime64(3),
-                                owner String,
-                                is_public Boolean DEFAULT false,
-                                tags Array(String) DEFAULT [],
-                                description String DEFAULT '',
-                                PRIMARY KEY (id)
-                            ) ENGINE = MergeTree()
-                            ORDER BY (id, created_at)
-                            SETTINGS index_granularity = 8192
-                        `);
-            }
-          );
+	  await runQuery("ATTACH '/tmp/chui.db' AS CH_UI").then(
+	   async () => {
+	    await runQuery(`
+	      CREATE TABLE IF NOT EXISTS CH_UI.saved_queries (
+	        id STRING,
+	        name STRING,
+	        query STRING,
+	        created_at TIMESTAMP,
+	        updated_at TIMESTAMP,
+	        owner STRING,
+	        is_public BOOLEAN DEFAULT false,
+	        tags STRING[] DEFAULT [],
+	        description STRING DEFAULT '',
+	        PRIMARY KEY (id)
+	      )
+	    `);
+	   }
+	  );
 
           // Verify the table was created successfully
           const isActive = await get().checkSavedQueriesStatus();
@@ -605,7 +604,8 @@ const useAppStore = create<AppState>()(
         }));
 
         try {
-          await runQuery("DROP TABLE IF EXISTS CH_UI.saved_queries");
+	  await runQuery("ATTACH '/tmp/chui.db' AS CH_UI");
+	  await runQuery("DROP TABLE IF EXISTS CH_UI.saved_queries");
 
           // Verify the table was dropped successfully
           const isActive = await get().checkSavedQueriesStatus();

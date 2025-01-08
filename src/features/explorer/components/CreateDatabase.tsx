@@ -163,20 +163,6 @@ const CreateDatabase = () => {
       }
       sqlStatement += `${databaseName} `;
 
-      if (onCluster && clusterName) {
-        sqlStatement += `ON CLUSTER ${clusterName} `;
-      }
-
-      if (engine === "Lazy") {
-        sqlStatement += `ENGINE = Lazy(${expirationTimeInSeconds}) `;
-      } else if (engine) {
-        sqlStatement += `ENGINE = ${engine} `;
-      }
-
-      if (comment) {
-        sqlStatement += `COMMENT '${comment}'`;
-      }
-
       setSql(sqlStatement.trim());
       setErrors({});
       return sqlStatement.trim();
